@@ -8,9 +8,13 @@ if _G.COverthrowLight == nil then
 end
 
 -- Required files
+require('utils/string')
+require('utils/requests')
 require('events')
 require('utils/timers')
 require('treasure')
+require('utils/modifiers')
+require('center')
 
 function Precache( context )
 	--[[
@@ -43,14 +47,15 @@ end
 function COverthrowLight:InitGameMode()
 	print( "[OVERTHROW LIGHT] Addon Loading" )
 	print( "[OVERTHROW LIGHT] Addon Version: 0.01 pre-alpha" )
-	print( "[OVERTHROW LIGHT] Light Version: 0.2 alpha" )
+	print( "[OVERTHROW LIGHT] Light Version: 0.315 alpha" )
 	GameRules:GetGameModeEntity():SetThink( "OnThink", self, "GlobalThink", 2 )
 	
 	--- Example listener
 	--ListenToGameEvent("do", Dynamic_Wrap(COverthrowLight, 'DOSOMETHING'), self)
 	ListenToGameEvent( "dota_npc_goal_reached", Dynamic_Wrap( COverthrowLight, "OnNPCGoalReached" ), self )
 	ListenToGameEvent( "game_rules_state_change", Dynamic_Wrap( COverthrowLight, "OnStateChanged" ), self )
-
+	ListenToGameEvent( "dota_team_kill_credit", Dynamic_Wrap( COverthrowLight, "OnTeamKillCredit" ), self )
+	ListenToGameEvent( "player_chat", Dynamic_Wrap( COverthrowLight, "OnChatEvent" ), self )
 	-- Register color for teams
 	self.m_TeamColors = {}
 	self.m_TeamColors[DOTA_TEAM_GOODGUYS] = { 61, 210, 150 }	--		Teal
@@ -64,6 +69,10 @@ function COverthrowLight:InitGameMode()
 	self.m_TeamColors[DOTA_TEAM_CUSTOM_7] = { 199, 228, 13 }	--		Olive
 	self.m_TeamColors[DOTA_TEAM_CUSTOM_8] = { 140, 42, 244 }	--		Purple
 
+	GameRules:GetGameModeEntity():SetDraftingBanningTimeOverride(0)
+	GameRules:SetShowcaseTime(0)
+	GameRules:SetStrategyTime(0)
+
 	for team = 0, (DOTA_TEAM_COUNT-1) do
 		color = self.m_TeamColors[ team ]
 		if color then
@@ -75,11 +84,9 @@ function COverthrowLight:InitGameMode()
 	if GetMapName() == "forest_solo" then
 		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, 1)
 		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, 1)
-		local players = GetNumConnectedHumanPlayers() + 1
-		for i=0,players do
+		for i=0,14 do
 			GameRules:SetCustomGameTeamMaxPlayers(6+i, 1)
 		end
-	
 	elseif GetMapName() == "desert_duo" then
 		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, 2)
 		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, 2)
@@ -91,7 +98,7 @@ end
 -- Evaluate the state of the game
 function COverthrowLight:OnThink()
 	if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
-
+		return 1
 	elseif GameRules:State_Get() >= DOTA_GAMERULES_STATE_POST_GAME then
 		return nil
 	end
