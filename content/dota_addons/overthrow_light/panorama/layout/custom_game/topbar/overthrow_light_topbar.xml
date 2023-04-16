@@ -1,0 +1,18 @@
+<root>
+    <styles>
+        <include src="file://{resources}/styles/custom_game/file_name.css" />
+    </styles>
+    <scripts>
+        <include src="file://{resources}/scripts/custom_game/file_name.js" />
+    </scripts>
+    <snippets>
+        <snippet name="player_panel">
+            <Panel class="overthrow_light_player_panel">
+                <DOTAHeroImage id="overthrow_light_hero" class="PanelClass" heroname="npc_dota_hero_pudge" heroimagestyle="portrait" />
+            </Panel>
+        </snippet>
+    </snippets>
+    <Panel class="file_name_root">
+        
+    </Panel>
+</root>

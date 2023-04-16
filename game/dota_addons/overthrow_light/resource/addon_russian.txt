@@ -20,7 +20,7 @@
 
 		"DOTA_Tooltip_modifier_invis_revealed"			"Невидимость раскрыта"
 
-		"DOTA_Tooltip_ability_item_bag_of_gold"			"300 золота"
+		"DOTA_Tooltip_ability_item_bag_of_gold"			"Биткоин"
 		"DOTA_Tooltip_ability_item_treasure_chest"		"Сундук с сокровищами"
 
 		"npc_dota_creature_basic_zombie"				"Зомби"

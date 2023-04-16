@@ -1,9 +1,10 @@
 -- Calls when game state has changed
 function COverthrowLight:OnStateChanged()
     if GameRules:State_Get() == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
-        -- Initiliaze treasure.lua to make work
+        -- Initiliaze all system to make work
+        COverthrowLight:InitCenter()
         treasure:Init()
-        print("State changed")
+        print("[OVERTHROW LIGHT] The state now: ", GameRules:State_Get())
     end
 end
 
@@ -20,19 +21,27 @@ end
 -- Initialized nettables for team and increase kills
 function COverthrowLight:OnTeamKillCredit( kv )
     local teamnumber = kv.teamnumber
-    -- Using pcall to avoid errors while getting table value
-    local success, result = pcall( CustomNetTables:GetTableValue("game_state", "team_"..teamnumber) )
-    if success then
+
+    local team = CustomNetTables:GetTableValue("game_state", "team_"..teamnumber)
+    local game_info = CustomNetTables:GetTableValue("game_state", "game_info")
+    if team then
+        -- Team will win after passing limit of kills
+        if team["kills"] >= game_info["int_kills"] then
+            GameRules:SetGameWinner( teamnumber )
+            print("[OVERTHROW LIGHT] Team by "..teamnumber.." won!")
+        end
+
         CustomNetTables:SetTableValue("game_state", "team_"..teamnumber, {
-            kills = tonumber(result["kills"]) + 1,
+            kills = tonumber(team["kills"]) + 1,
         })
 
         print( "[OVERTHROW LIGHT] Succesfuly changed nettable \"team_"..teamnumber.." in \"game_state\"" )
+        return
     else
-        print( "[OVERTHROW LIGHT] There was caused error: ", result )
-        print( "[OVERTHROW LIGHT] Getting a traceback: ", debug.traceback() )
+        print( "[OVERTHROW LIGHT] This key is not exists in nettable..." )
     end
 
+    -- Adding team to count kills
     print("[OVERTHROW LIGHT] Adding team in game_state")
     CustomNetTables:SetTableValue("game_state", "team_"..teamnumber, {
         kills = 1,

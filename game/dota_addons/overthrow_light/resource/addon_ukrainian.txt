@@ -20,7 +20,7 @@
 
 		"DOTA_Tooltip_modifier_invis_revealed"			"Виявлено"
 
-		"DOTA_Tooltip_ability_item_bag_of_gold"			"300 золота"
+		"DOTA_Tooltip_ability_item_bag_of_gold"			"Біткойн"
 		"DOTA_Tooltip_ability_item_treasure_chest"		"Скарбниця"
 
 		"npc_dota_creature_basic_zombie"				"Зомбі"

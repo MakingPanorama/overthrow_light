@@ -27,12 +27,9 @@ function Precache( context )
 
 	-- Precache only NEED resources to add them
 	PrecacheResource("particle", "particles/experience_border.vpcf", context)
-
 	PrecacheItemByNameSync( "item_bag_of_gold", context )
-
 	PrecacheResource( "particle", "particles/items2_fx/veil_of_discord.vpcf", context )	
 	PrecacheResource( "particle", "particles/treasure_courier_death.vpcf", context )
-
 	PrecacheItemByNameSync( "item_treasure_chest", context )
 	PrecacheModel( "item_treasure_chest", context )
 
@@ -47,7 +44,7 @@ end
 function COverthrowLight:InitGameMode()
 	print( "[OVERTHROW LIGHT] Addon Loading" )
 	print( "[OVERTHROW LIGHT] Addon Version: 0.01 pre-alpha" )
-	print( "[OVERTHROW LIGHT] Light Version: 0.315 alpha" )
+	print( "[OVERTHROW LIGHT] Light Version: 0.34 alpha" )
 	GameRules:GetGameModeEntity():SetThink( "OnThink", self, "GlobalThink", 2 )
 	
 	--- Example listener
@@ -69,10 +66,16 @@ function COverthrowLight:InitGameMode()
 	self.m_TeamColors[DOTA_TEAM_CUSTOM_7] = { 199, 228, 13 }	--		Olive
 	self.m_TeamColors[DOTA_TEAM_CUSTOM_8] = { 140, 42, 244 }	--		Purple
 
+	-- Setting rules to addon
 	GameRules:GetGameModeEntity():SetDraftingBanningTimeOverride(0)
 	GameRules:SetShowcaseTime(0)
 	GameRules:SetStrategyTime(0)
+	GameRules:SetCustomGameAllowBattleMusic(true)
+	GameRules:SetCustomGameAllowMusicAtGameStart(false)
+	GameRules:SetCustomGameSetupRemainingTime(0)
+	GameRules:SetCustomGameEndDelay(3)
 
+	-- Apply color for team
 	for team = 0, (DOTA_TEAM_COUNT-1) do
 		color = self.m_TeamColors[ team ]
 		if color then
@@ -87,11 +90,19 @@ function COverthrowLight:InitGameMode()
 		for i=0,14 do
 			GameRules:SetCustomGameTeamMaxPlayers(6+i, 1)
 		end
+		-- Modifying game_info
+		CustomNetTables:SetTableValue("game_state", "game_info", {
+			int_kills = 50
+		})
 	elseif GetMapName() == "desert_duo" then
 		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, 2)
 		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, 2)
 		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_CUSTOM_1, 2)
 		GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_CUSTOM_2, 2)
+		-- Modifying game_info
+		CustomNetTables:SetTableValue("game_state", "game_info", {
+			int_kills = 60
+		})
 	end
 end
 
