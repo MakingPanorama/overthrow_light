@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../../../../../Steam/steamapps/common/dota 2 beta/game/dota_addons/overthrow/scripts"
+		},
+		{
+			"path": "../../../../../Steam/steamapps/common/dota 2 beta/content/dota/panorama"
 		}
 	],
 	"settings": {}

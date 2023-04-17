@@ -4,6 +4,24 @@ function COverthrowLight:OnStateChanged()
         -- Initiliaze all system to make work
         COverthrowLight:InitCenter()
         treasure:Init()
+        
+        local teamList = {}
+        for i=0, (DOTA_TEAM_COUNT-1) do
+            local player_count = PlayerResource:GetPlayerCountForTeam(i)
+            CustomNetTables:SetTableValue("game_state", "team_"..i, {
+                kills = 0,
+                team_id = i,
+            })
+
+            local team = CustomNetTables:GetTableValue("game_state", "team_"..i)
+            teamList[i] = team;
+            print(teamList[i], team);
+        end
+    
+        CustomGameEventManager:Send_ServerToAllClients("update_ui_config", {
+            teamInfos = teamList,
+        })
+        DeepPrintTable(teamList)
         print("[OVERTHROW LIGHT] The state now: ", GameRules:State_Get())
     end
 end
@@ -33,20 +51,31 @@ function COverthrowLight:OnTeamKillCredit( kv )
 
         CustomNetTables:SetTableValue("game_state", "team_"..teamnumber, {
             kills = tonumber(team["kills"]) + 1,
+            team_id = teamnumber
         })
-
         print( "[OVERTHROW LIGHT] Succesfuly changed nettable \"team_"..teamnumber.." in \"game_state\"" )
-        return
     else
         print( "[OVERTHROW LIGHT] This key is not exists in nettable..." )
     end
 
-    -- Adding team to count kills
-    print("[OVERTHROW LIGHT] Adding team in game_state")
-    CustomNetTables:SetTableValue("game_state", "team_"..teamnumber, {
-        kills = 1,
+    -- Finding all team nettables and get their places
+    local teamList = {}
+    for i=0, (DOTA_TEAM_COUNT-1) do
+        local team = CustomNetTables:GetTableValue("game_state", "team_"..i)
+        if (team) then
+            teamList[i] = team
+        end
+    end
+
+    table.sort(teamList, function(a,b) 
+        return a["kills"] > b["kills"]
+    end)
+
+    -- Sending data to client
+    CustomGameEventManager:Send_ServerToAllClients("update_ui_config", {
+        teamInfos = teamList,
     })
-    print("[OVERTHROW LIGHT] team_"..teamnumber.." successfuly added to game_state")
+    DeepPrintTable(teamList)
 end
 
 -- Calls when player sends message

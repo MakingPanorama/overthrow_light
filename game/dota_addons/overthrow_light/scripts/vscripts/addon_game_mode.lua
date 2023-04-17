@@ -32,7 +32,6 @@ function Precache( context )
 	PrecacheResource( "particle", "particles/treasure_courier_death.vpcf", context )
 	PrecacheItemByNameSync( "item_treasure_chest", context )
 	PrecacheModel( "item_treasure_chest", context )
-
 	PrecacheResource( "soundfile", "soundevents/game_sounds_overthrow.vsndevts", context )
 end
 

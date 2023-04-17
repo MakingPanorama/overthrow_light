@@ -1,18 +1,51 @@
 <root>
     <styles>
-        <include src="file://{resources}/styles/custom_game/file_name.css" />
+        <include src="file://{resources}/styles/custom_game/topbar/overthrow_light_topbar.css" />
     </styles>
     <scripts>
-        <include src="file://{resources}/scripts/custom_game/file_name.js" />
+        <include src="file://{resources}/scripts/custom_game/topbar/overthrow_light_topbar.js" />
     </scripts>
     <snippets>
         <snippet name="player_panel">
             <Panel class="overthrow_light_player_panel">
-                <DOTAHeroImage id="overthrow_light_hero" class="PanelClass" heroname="npc_dota_hero_pudge" heroimagestyle="portrait" />
+                <Button id="overthrow_light_portait">
+                    <DOTAHeroImage id="overthrow_light_hero" heroimagestyle="landscape" heroname="npc_dota_hero_pudge" />
+                </Button>
+                <Panel id="overthrow_light_respawn_container" hittest="false">
+                    <Label id="overthrow_light_respawn_indicator" text="13" />
+                </Panel>
+            </Panel>
+        </snippet>
+
+        <snippet name="team_panel">
+            <Panel class="overthrow_light_team_panel">
+                <Panel id="overthrow_light_team_container">
+                    <Label id="overthrow_light_kills_label" text="1" />
+                    <Panel id="overthrow_light_team_player_container">
+                        <!-- Players here -->
+                    </Panel>
+                </Panel>
             </Panel>
         </snippet>
     </snippets>
-    <Panel class="file_name_root">
-        
+
+    <Panel class="overthrow_light_main_topbar">
+        <Panel id="overthrow_light_teams_container">
+            <!--<Panel class="overthrow_light_team_panel">
+                <Panel id="overthrow_light_team_container">
+                    <Label id="overthrow_light_kills_label" text="1" />
+                    <Panel id="overthrow_light_team_player_container">
+                        <Panel class="overthrow_light_player_panel">
+                            <Button id="overthrow_light_portait">
+                                <DOTAHeroImage id="overthrow_light_hero" heroimagestyle="landscape" heroname="npc_dota_hero_pudge" />
+                            </Button>
+                            <Panel id="overthrow_light_respawn_container" hittest="fa">
+                                <Label id="overthrow_light_respawn_indicator" text="13" />
+                            </Panel>
+                        </Panel>
+                    </Panel>
+                </Panel>
+            </Panel> -->
+        </Panel>
     </Panel>
 </root>
